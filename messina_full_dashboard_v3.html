@@ -1,0 +1,549 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --brown:#3B1A0A;--brown-mid:#6B3A1F;--brown-light:#C4A882;
+  --cream:#FAF3E8;--cream-dark:#F0E6D0;--cream-mid:#E8D8BC;
+  --orange:#E8621A;--orange-light:#FAE0D0;
+  --green:#2D6A2D;--green-light:#D8EDD8;
+  --red:#C0392B;--red-light:#FAD9D5;
+  --yellow-light:#FDF3C0;--yellow-dark:#7A4A00;
+  --text-dark:#1C0A00;--text-mid:#5C3A1E;--text-light:#9C7A5A;
+}
+body{font-family:var(--font-sans);background:var(--cream)}
+.wrap{padding:0.5rem 0}
+
+/* HEADER */
+.header{background:var(--brown);border-radius:10px;padding:0;margin-bottom:8px;display:flex;align-items:stretch;overflow:hidden;height:52px}
+.logo-area{background:var(--cream);width:160px;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0 16px}
+.logo-text{font-size:18px;font-weight:500;color:var(--brown);letter-spacing:0.15em}
+.logo-bar{width:3px;background:var(--brown-light);flex-shrink:0}
+.header-right{flex:1;display:flex;align-items:center;padding:0 16px;gap:16px}
+.header-title{font-size:12px;font-weight:500;color:var(--cream);letter-spacing:0.02em}
+.header-sub{font-size:10px;color:var(--brown-light);margin-left:auto}
+
+/* SLICER PANEL */
+.slicer-panel{background:white;border:0.5px solid var(--cream-mid);border-radius:10px;padding:8px 12px;margin-bottom:8px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.slicer-label{font-size:9px;font-weight:500;color:var(--text-mid);text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap}
+.slicer-group{display:flex;align-items:center;gap:6px}
+.slicer-divider{width:0.5px;height:24px;background:var(--cream-mid)}
+.chip{display:inline-block;padding:3px 10px;border-radius:12px;font-size:9px;cursor:pointer;border:0.5px solid var(--cream-mid);color:var(--text-mid);background:var(--cream);transition:all 0.15s;user-select:none}
+.chip.active{background:var(--brown);color:var(--cream);border-color:var(--brown)}
+.chip:hover:not(.active){background:var(--cream-dark)}
+.slicer-reset{margin-left:auto;font-size:9px;color:var(--text-light);cursor:pointer;padding:3px 8px;border:0.5px solid var(--cream-mid);border-radius:8px;background:transparent}
+.slicer-reset:hover{background:var(--cream-dark)}
+
+/* TABS */
+.tabs{display:flex;gap:4px;margin-bottom:0}
+.tab{padding:6px 16px;border-radius:8px 8px 0 0;font-size:10px;font-weight:500;cursor:pointer;border:0.5px solid var(--cream-mid);border-bottom:none;color:var(--text-light);background:var(--cream-dark)}
+.tab.active{background:white;color:var(--brown);border-color:var(--cream-mid)}
+
+/* CANVAS */
+.canvas{background:var(--cream);border:0.5px solid var(--cream-mid);border-radius:0 10px 10px 10px;padding:12px;min-height:460px}
+.page{display:none}.page.active{display:block}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px}
+.g21{display:grid;grid-template-columns:1.4fr 1fr;gap:8px;margin-bottom:8px}
+.g12{display:grid;grid-template-columns:1fr 1.4fr;gap:8px;margin-bottom:8px}
+
+/* BOX */
+.box{background:white;border-radius:10px;border:0.5px solid var(--cream-mid);padding:10px 12px}
+.bt{font-size:9px;font-weight:500;color:var(--text-mid);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:7px;display:flex;align-items:center;gap:5px}
+.bt::before{content:'';width:3px;height:11px;background:var(--orange);border-radius:2px;flex-shrink:0}
+.bn{font-size:8px;color:var(--text-light);margin-top:5px;font-style:italic}
+
+/* KPI */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:8px}
+.kpi{border-radius:10px;padding:9px 11px}
+.kpi.dark{background:var(--brown)}.kpi.orange{background:var(--orange)}
+.kpi.light{background:white;border:0.5px solid var(--cream-mid)}
+.kl{font-size:8px;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:2px}
+.kv{font-size:19px;font-weight:500}
+.ks{font-size:8px;margin-top:1px}
+.kpi.dark .kl,.kpi.dark .ks{color:var(--brown-light)}.kpi.dark .kv{color:var(--cream)}
+.kpi.orange .kl,.kpi.orange .ks{color:#FAD0B0}.kpi.orange .kv{color:white}
+.kpi.light .kl,.kpi.light .ks{color:var(--text-light)}.kpi.light .kv{color:var(--brown)}
+
+/* TABLE */
+.dt{width:100%;border-collapse:collapse;font-size:9px}
+.dt th{background:var(--brown);color:var(--cream);padding:5px 8px;text-align:left;font-weight:500;font-size:9px}
+.dt td{padding:4px 8px;border-bottom:0.5px solid var(--cream-dark);color:var(--text-dark)}
+.dt tr:nth-child(even) td{background:var(--cream)}
+.neg td{background:var(--red-light)!important;color:#6B1010!important;font-weight:500}
+.pos td{background:var(--green-light)!important;color:#1A5C1A!important;font-weight:500}
+.amb td{color:var(--yellow-dark)!important}
+.badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:8px;font-weight:500}
+
+/* BARS */
+.bw{display:flex;flex-direction:column;gap:4px}
+.br{display:flex;align-items:center;gap:5px}
+.bn2{font-size:9px;color:var(--text-mid);width:88px;flex-shrink:0}
+.bt2{flex:1;height:8px;border-radius:4px;background:var(--cream-dark);overflow:hidden;display:flex}
+.bv{font-size:9px;width:38px;text-align:right;flex-shrink:0}
+
+/* MAP */
+.map-mock{background:linear-gradient(135deg,#E8DCC8 0%,#D4C4A8 100%);border-radius:8px;position:relative;overflow:hidden}
+.dot{position:absolute;border-radius:50%;border:2px solid white;cursor:pointer;transition:transform 0.15s}
+.dot:hover{transform:scale(1.35)}
+.tooltip{position:absolute;background:var(--brown);border-radius:8px;padding:8px 10px;font-size:9px;pointer-events:none;z-index:10;min-width:130px;display:none}
+
+/* TREND */
+.trend-area{position:relative;height:70px;margin-top:4px}
+
+/* HEATMAP */
+.hm-grid{display:grid;gap:2px;margin-top:6px}
+.hm-cell{border-radius:3px;height:16px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:500}
+
+/* INSIGHT */
+.insight{background:var(--brown);border-radius:10px;padding:9px 13px;margin-top:8px}
+.it{font-size:10px;font-weight:500;color:var(--cream);margin-bottom:2px}
+.ib{font-size:9px;color:var(--brown-light);line-height:1.5}
+
+/* MATRIX */
+.mx{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:5px;height:148px}
+.mc{border-radius:8px;padding:7px 9px}
+.mc-l{font-size:8px;font-weight:500;margin-bottom:2px}
+.mc-t{font-size:9px;font-weight:500;margin-bottom:2px}
+.mc-d{font-size:8px;line-height:1.4}
+
+/* SCENARIO */
+.sc{background:var(--cream-dark);border-radius:8px;padding:8px 10px;margin-bottom:5px}
+.sc-h{display:flex;justify-content:space-between;margin-bottom:4px}
+.sc-nums{display:flex;align-items:center;gap:7px}
+.sc-bar{margin-top:4px;height:4px;border-radius:3px;background:var(--cream-mid);display:flex;overflow:hidden}
+</style>
+
+<div class="wrap">
+
+<!-- HEADER WITH LOGO -->
+<div class="header">
+  <div class="logo-area">
+    <span class="logo-text">MESSINA</span>
+  </div>
+  <div class="logo-bar"></div>
+  <div class="header-right">
+    <div class="header-title">Customer Review Analysis Dashboard</div>
+    <div class="header-sub">1,278 reviews · 20 stores · Dec 2023 – Mar 2026</div>
+  </div>
+</div>
+
+<!-- SLICER PANEL -->
+<div class="slicer-panel">
+  <div class="slicer-group">
+    <div class="slicer-label">Year</div>
+    <div class="chip active" onclick="toggleChip(this,'year')">All</div>
+    <div class="chip" onclick="toggleChip(this,'year')">2024</div>
+    <div class="chip" onclick="toggleChip(this,'year')">2025</div>
+    <div class="chip" onclick="toggleChip(this,'year')">2026</div>
+  </div>
+  <div class="slicer-divider"></div>
+  <div class="slicer-group">
+    <div class="slicer-label">Sentiment</div>
+    <div class="chip active" onclick="toggleChip(this,'sent')">All</div>
+    <div class="chip" onclick="toggleChip(this,'sent')" style="border-color:#A8D080;color:#1A5C1A">Positive</div>
+    <div class="chip" onclick="toggleChip(this,'sent')" style="border-color:#F09080;color:#8B1A1A">Negative</div>
+    <div class="chip" onclick="toggleChip(this,'sent')">Neutral</div>
+  </div>
+  <div class="slicer-divider"></div>
+  <div class="slicer-group">
+    <div class="slicer-label">Store</div>
+    <div class="chip active" onclick="toggleChip(this,'store')">All stores</div>
+    <div class="chip" onclick="toggleChip(this,'store')" style="border-color:#F09080;color:#8B1A1A">Critical only</div>
+    <div class="chip" onclick="toggleChip(this,'store')" style="border-color:#A8D080;color:#1A5C1A">Top only</div>
+  </div>
+  <button class="slicer-reset" onclick="resetSlicers()">Reset filters</button>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="showPage(0,this)">01 — Store overview</div>
+  <div class="tab" onclick="showPage(1,this)">02 — What drives rating</div>
+  <div class="tab" onclick="showPage(2,this)">03 — Action & forecast</div>
+</div>
+
+<div class="canvas">
+
+<!-- PAGE 1 -->
+<div class="page active" id="p0">
+
+  <div class="kpi-row">
+    <div class="kpi dark"><div class="kl">Avg rating</div><div class="kv">4.52 ★</div><div class="ks">Google official</div></div>
+    <div class="kpi orange"><div class="kl">Positive rate</div><div class="kv">76.7%</div><div class="ks">from sample</div></div>
+    <div class="kpi dark"><div class="kl">Reviews analysed</div><div class="kv">1,278</div><div class="ks">with text</div></div>
+    <div class="kpi light"><div class="kl">Negative rate</div><div class="kv" style="color:#C0392B">20.7%</div><div class="ks">from sample</div></div>
+    <div class="kpi light"><div class="kl">Stores</div><div class="kv">20</div><div class="ks">Sydney locations</div></div>
+  </div>
+
+  <div class="g21">
+    <div class="box">
+      <div class="bt">Interactive store map — Sydney</div>
+      <div class="map-mock" style="height:180px" id="mapbox">
+        <div style="font-size:9px;color:#7A5C3A;opacity:0.5;position:absolute;bottom:6px;left:8px">Hover a store for details</div>
+        <div class="dot" style="width:13px;height:13px;background:#C0392B;left:28%;top:63%" data-name="Randwick" data-rating="3.59" data-pos="62.1%" data-neg="36.4%" data-issue="Service" data-reviews="66"></div>
+        <div class="dot" style="width:13px;height:13px;background:#C0392B;left:17%;top:42%" data-name="Parramatta" data-rating="3.84" data-pos="62.7%" data-neg="34.7%" data-issue="Service" data-reviews="75"></div>
+        <div class="dot" style="width:12px;height:12px;background:#E8621A;left:73%;top:23%" data-name="Manly" data-rating="4.11" data-pos="67.1%" data-neg="30.1%" data-issue="Service" data-reviews="73"></div>
+        <div class="dot" style="width:12px;height:12px;background:#E8621A;left:42%;top:51%" data-name="Darling Square" data-rating="4.11" data-pos="68.8%" data-neg="26.2%" data-issue="Service" data-reviews="80"></div>
+        <div class="dot" style="width:14px;height:14px;background:#2D6A2D;left:55%;top:68%" data-name="Miranda" data-rating="4.45" data-pos="90.9%" data-neg="9.1%" data-issue="—" data-reviews="55"></div>
+        <div class="dot" style="width:15px;height:15px;background:#2D6A2D;left:50%;top:33%" data-name="Circular Quay" data-rating="4.64" data-pos="85.7%" data-neg="13.1%" data-issue="—" data-reviews="84"></div>
+        <div class="dot" style="width:14px;height:14px;background:#2D6A2D;left:58%;top:47%" data-name="Newtown" data-rating="4.64" data-pos="83.6%" data-neg="13.4%" data-issue="—" data-reviews="67"></div>
+        <div class="dot" style="width:12px;height:12px;background:#2D6A2D;left:64%;top:72%" data-name="Cronulla" data-rating="4.60" data-pos="88.6%" data-neg="11.4%" data-issue="—" data-reviews="35"></div>
+        <div class="dot" style="width:13px;height:13px;background:#2D6A2D;left:46%;top:43%" data-name="Surry Hills" data-rating="4.33" data-pos="75.0%" data-neg="18.8%" data-issue="Wait time" data-reviews="64"></div>
+        <div class="dot" style="width:13px;height:13px;background:#2D6A2D;left:38%;top:37%" data-name="Darlinghurst" data-rating="4.24" data-pos="80.3%" data-neg="19.7%" data-issue="Service" data-reviews="71"></div>
+        <div id="tip" class="tooltip"></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:5px">
+        <span style="font-size:8px;color:#8B1A1A">● Critical (pos <65%)</span>
+        <span style="font-size:8px;color:#7A4A00">● At risk (65–75%)</span>
+        <span style="font-size:8px;color:#1A5C1A">● Strong (>75%)</span>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="box" style="flex:1">
+        <div class="bt">Stores — sorted by positive rate ↑</div>
+        <table class="dt">
+          <thead><tr><th>Store</th><th>★</th><th>Pos%</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr class="neg"><td>Randwick</td><td>3.59</td><td>62.1%</td><td><span class="badge" style="background:#8B1A1A;color:white">Critical</span></td></tr>
+            <tr class="neg"><td>Parramatta</td><td>3.84</td><td>62.7%</td><td><span class="badge" style="background:#8B1A1A;color:white">Critical</span></td></tr>
+            <tr class="amb"><td>Manly</td><td>4.11</td><td>67.1%</td><td><span class="badge" style="background:var(--yellow-light);color:var(--yellow-dark)">At risk</span></td></tr>
+            <tr class="amb"><td>Darling Sq.</td><td>4.11</td><td>68.8%</td><td><span class="badge" style="background:var(--yellow-light);color:var(--yellow-dark)">At risk</span></td></tr>
+            <tr><td>Surry Hills</td><td>4.33</td><td>75.0%</td><td><span class="badge" style="background:var(--cream-dark);color:var(--text-mid)">Avg</span></td></tr>
+            <tr><td>Circular Quay</td><td>4.64</td><td>85.7%</td><td><span class="badge" style="background:var(--green-light);color:#1A5C1A">Strong</span></td></tr>
+            <tr class="pos"><td>Cronulla</td><td>4.60</td><td>88.6%</td><td><span class="badge" style="background:#2D6A2D;color:white">Top ★</span></td></tr>
+            <tr class="pos"><td>Miranda</td><td>4.45</td><td>90.9%</td><td><span class="badge" style="background:#2D6A2D;color:white">Top ★</span></td></tr>
+          </tbody>
+        </table>
+        <div class="bn">Click row to cross-filter map</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM ROW: trend + rating dist -->
+  <div class="g2">
+    <div class="box">
+      <div class="bt">Monthly sentiment trend</div>
+      <div class="trend-area">
+        <svg width="100%" height="70" viewBox="0 0 400 70" preserveAspectRatio="none">
+          <polyline points="0,55 40,48 80,42 120,50 160,35 200,30 240,38 280,22 320,26 360,20 400,18" fill="none" stroke="#2D6A2D" stroke-width="2" stroke-linejoin="round"/>
+          <polyline points="0,20 40,24 80,32 120,22 160,36 200,28 240,24 280,34 320,28 360,30 400,35" fill="none" stroke="#C0392B" stroke-width="1.5" stroke-dasharray="5 3" stroke-linejoin="round"/>
+          <line x1="0" y1="65" x2="400" y2="65" stroke="#E0CDB0" stroke-width="0.5"/>
+        </svg>
+        <div style="display:flex;gap:10px;margin-top:4px">
+          <span style="font-size:8px;color:#1A5C1A">— Positive trend</span>
+          <span style="font-size:8px;color:#C0392B">--- Negative trend</span>
+        </div>
+      </div>
+      <div class="bn">Line chart · monthly · filter by year slicer above</div>
+    </div>
+
+    <div class="box">
+      <div class="bt">Rating distribution</div>
+      <div style="display:flex;align-items:flex-end;gap:5px;height:60px;margin-top:4px">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1">
+          <div style="font-size:8px;color:#8B1A1A">159</div>
+          <div style="background:#C0392B;border-radius:4px 4px 0 0;width:100%;height:44px"></div>
+          <div style="font-size:8px;color:var(--text-light)">★1</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1">
+          <div style="font-size:8px;color:var(--text-light)">36</div>
+          <div style="background:#E8A080;border-radius:4px 4px 0 0;width:100%;height:10px"></div>
+          <div style="font-size:8px;color:var(--text-light)">★2</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1">
+          <div style="font-size:8px;color:var(--text-light)">62</div>
+          <div style="background:#E8C890;border-radius:4px 4px 0 0;width:100%;height:17px"></div>
+          <div style="font-size:8px;color:var(--text-light)">★3</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1">
+          <div style="font-size:8px;color:var(--text-light)">248</div>
+          <div style="background:#7AB87A;border-radius:4px 4px 0 0;width:100%;height:27px"></div>
+          <div style="font-size:8px;color:var(--text-light)">★4</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1">
+          <div style="font-size:8px;color:#1A5C1A">1348</div>
+          <div style="background:#2D6A2D;border-radius:4px 4px 0 0;width:100%;height:58px"></div>
+          <div style="font-size:8px;color:var(--text-light)">★5</div>
+        </div>
+      </div>
+      <div class="bn">Highly polarised — typical of experience-driven brands</div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="it">Key insight — Page 1</div>
+    <div class="ib">Performance is geographically uneven. Randwick and Parramatta positive rates are 4× lower than top performers Miranda and Cronulla — pointing to store-level execution issues. Rating distribution is highly polarised (1★ or 5★), suggesting customers either love or hate the experience.</div>
+  </div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="p1">
+
+  <div class="g2">
+    <div class="box">
+      <div class="bt">What customers mention — by volume</div>
+      <table class="dt">
+        <thead><tr><th>Aspect</th><th>Mentions</th><th>Pos%</th><th>Neg%</th></tr></thead>
+        <tbody>
+          <tr><td>Product Quality</td><td>294</td><td>78%</td><td>22%</td></tr>
+          <tr><td>Service</td><td>287</td><td>56%</td><td style="color:#8B1A1A;font-weight:500">44% ▲</td></tr>
+          <tr class="pos"><td>Flavour Variety</td><td>268</td><td style="color:#1A5C1A;font-weight:500">85% ★</td><td>15%</td></tr>
+          <tr><td>Store Env.</td><td>61</td><td>72%</td><td>28%</td></tr>
+          <tr class="neg"><td>Wait Time</td><td>44</td><td>45%</td><td style="color:#8B1A1A;font-weight:500">55% ▲</td></tr>
+          <tr><td>Price & Value</td><td>41</td><td>52%</td><td>48%</td></tr>
+        </tbody>
+      </table>
+      <div style="display:flex;gap:8px;margin-top:5px">
+        <span style="font-size:8px;color:#1A5C1A;font-weight:500">★ Best positive rate</span>
+        <span style="font-size:8px;color:#8B1A1A;font-weight:500">▲ Highest negative rate</span>
+      </div>
+      <div class="bn">General Positive/Negative excluded · sorted by volume</div>
+    </div>
+
+    <div class="box">
+      <div class="bt">Importance vs negative rate</div>
+      <div style="position:relative;height:148px;margin-top:4px">
+        <div style="position:absolute;bottom:16px;left:20px;right:0;height:0.5px;background:var(--cream-mid)"></div>
+        <div style="position:absolute;bottom:16px;left:20px;top:0;width:0.5px;background:var(--cream-mid)"></div>
+        <div style="position:absolute;left:50%;top:0;bottom:16px;border-left:0.5px dashed var(--cream-mid)"></div>
+        <div style="position:absolute;top:44%;left:20px;right:0;border-top:0.5px dashed var(--cream-mid)"></div>
+        <div style="position:absolute;top:2px;right:4px;font-size:8px;color:#8B1A1A;font-weight:500">DANGER ZONE ⚠</div>
+        <div style="position:absolute;bottom:3px;right:0;font-size:8px;color:var(--text-light)">volume →</div>
+        <div style="position:absolute;top:0;left:2px;writing-mode:vertical-lr;transform:rotate(180deg);font-size:8px;color:var(--text-light)">neg% ↑</div>
+        <div style="position:absolute;width:14px;height:14px;border-radius:50%;background:#C0392B;opacity:0.9;left:12%;bottom:72%;transform:translate(-50%,50%)"></div>
+        <div style="position:absolute;font-size:8px;color:#8B1A1A;font-weight:500;left:15%;bottom:73%">Wait</div>
+        <div style="position:absolute;width:11px;height:11px;border-radius:50%;background:#E8621A;opacity:0.9;left:9%;bottom:60%;transform:translate(-50%,50%)"></div>
+        <div style="position:absolute;font-size:8px;color:var(--yellow-dark);left:11%;bottom:58%">Price</div>
+        <div style="position:absolute;width:24px;height:24px;border-radius:50%;background:#C0392B;opacity:0.9;left:67%;bottom:57%;transform:translate(-50%,50%)"></div>
+        <div style="position:absolute;font-size:8px;color:#8B1A1A;font-weight:500;left:69%;bottom:59%">Service ⚠</div>
+        <div style="position:absolute;width:24px;height:24px;border-radius:50%;background:#2D6A2D;opacity:0.9;left:72%;bottom:26%;transform:translate(-50%,50%)"></div>
+        <div style="position:absolute;font-size:8px;color:#1A5C1A;left:74%;bottom:23%">Product</div>
+        <div style="position:absolute;width:22px;height:22px;border-radius:50%;background:#2D6A2D;opacity:0.9;left:63%;bottom:13%;transform:translate(-50%,50%)"></div>
+        <div style="position:absolute;font-size:8px;color:#1A5C1A;font-weight:500;left:65%;bottom:9%">Flavour ★</div>
+        <div style="position:absolute;width:10px;height:10px;border-radius:50%;background:#1A5276;opacity:0.9;left:18%;bottom:33%;transform:translate(-50%,50%)"></div>
+        <div style="position:absolute;font-size:8px;color:#1A5276;left:20%;bottom:31%">Env</div>
+      </div>
+      <div class="bn">Top-right = high volume + high negative = priority fix</div>
+    </div>
+  </div>
+
+  <!-- CORRELATION + HEATMAP -->
+  <div class="g12">
+    <div class="box">
+      <div class="bt">Correlation with store rating (r)</div>
+      <div class="bw" style="margin-top:4px">
+        <div class="br">
+          <div class="bn2" style="color:#8B1A1A;font-weight:500">Service</div>
+          <div class="bt2"><div style="width:82%;background:#C0392B;height:100%;border-radius:4px"></div></div>
+          <div class="bv" style="color:#8B1A1A;font-weight:500">−0.82</div>
+          <span class="badge" style="background:var(--red-light);color:#8B1A1A;margin-left:4px;font-size:8px">Strongest</span>
+        </div>
+        <div class="br">
+          <div class="bn2" style="color:var(--yellow-dark)">Wait Time</div>
+          <div class="bt2"><div style="width:65%;background:#E8621A;height:100%;border-radius:4px"></div></div>
+          <div class="bv" style="color:var(--yellow-dark)">−0.65</div>
+          <span class="badge" style="background:var(--yellow-light);color:var(--yellow-dark);margin-left:4px;font-size:8px">High</span>
+        </div>
+        <div class="br">
+          <div class="bn2" style="color:var(--text-mid)">Price & Value</div>
+          <div class="bt2"><div style="width:48%;background:#9C7A5A;height:100%;border-radius:4px"></div></div>
+          <div class="bv" style="color:var(--text-mid)">−0.48</div>
+          <span class="badge" style="background:var(--cream-dark);color:var(--text-mid);margin-left:4px;font-size:8px">Moderate</span>
+        </div>
+        <div class="br">
+          <div class="bn2" style="color:#1A5C1A">Flavour Variety</div>
+          <div class="bt2"><div style="width:40%;background:#2D6A2D;height:100%;border-radius:4px"></div></div>
+          <div class="bv" style="color:#1A5C1A">+0.41</div>
+          <span class="badge" style="background:var(--green-light);color:#1A5C1A;margin-left:4px;font-size:8px">Asset ★</span>
+        </div>
+      </div>
+      <div class="bn">Negative r = more complaints → lower rating · Calculate with CORREL() in Excel</div>
+    </div>
+
+    <div class="box">
+      <div class="bt">Store × category heatmap — negative rate %</div>
+      <div style="overflow-x:auto;margin-top:2px">
+        <table style="width:100%;border-collapse:collapse;font-size:8px">
+          <thead>
+            <tr>
+              <th style="background:var(--brown);color:var(--cream);padding:4px 6px;text-align:left;font-weight:500;width:90px">Store</th>
+              <th style="background:var(--brown);color:var(--cream);padding:4px 5px;text-align:center;font-weight:500">Service</th>
+              <th style="background:var(--brown);color:var(--cream);padding:4px 5px;text-align:center;font-weight:500">Wait</th>
+              <th style="background:var(--brown);color:var(--cream);padding:4px 5px;text-align:center;font-weight:500">Product</th>
+              <th style="background:var(--brown);color:var(--cream);padding:4px 5px;text-align:center;font-weight:500">Flavour</th>
+              <th style="background:var(--brown);color:var(--cream);padding:4px 5px;text-align:center;font-weight:500">Price</th>
+            </tr>
+          </thead>
+          <tbody id="heatmap-body">
+          </tbody>
+        </table>
+      </div>
+      <div class="bn">Darker red = higher negative rate · Click store row to filter other charts</div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="it">Key insight — Page 2</div>
+    <div class="ib">Service is in the danger zone — 2nd most mentioned AND 44% negative rate with the strongest correlation to low ratings (r = −0.82). The heatmap shows Randwick and Parramatta have elevated negative rates across multiple categories — systemic issues, not isolated complaints.</div>
+  </div>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page" id="p2">
+
+  <div class="g2">
+    <div class="box">
+      <div class="bt">Priority action matrix</div>
+      <div class="mx">
+        <div class="mc" style="background:var(--red-light);border:0.5px solid #E8B4A0">
+          <div class="mc-l" style="color:#8B1A1A">⚡ Fix first</div>
+          <div class="mc-t" style="color:#8B1A1A">Service quality</div>
+          <div class="mc-d" style="color:#C0392B">Staff training<br>Problem resolution<br>Attitude & empathy</div>
+        </div>
+        <div class="mc" style="background:var(--yellow-light);border:0.5px solid #E8D080">
+          <div class="mc-l" style="color:var(--yellow-dark)">📋 Plan for</div>
+          <div class="mc-t" style="color:var(--yellow-dark)">Wait time</div>
+          <div class="mc-d" style="color:#9C6A00">Queue management<br>Peak hour staffing<br>Order flow design</div>
+        </div>
+        <div class="mc" style="background:var(--green-light);border:0.5px solid #A8D080">
+          <div class="mc-l" style="color:#1A5C1A">✅ Maintain</div>
+          <div class="mc-t" style="color:#1A5C1A">Flavour variety</div>
+          <div class="mc-d" style="color:#2D6A2D">Keep innovation<br>Limited editions<br>Seasonal menu</div>
+        </div>
+        <div class="mc" style="background:var(--cream-dark);border:0.5px solid var(--cream-mid)">
+          <div class="mc-l" style="color:var(--text-mid)">💡 Monitor</div>
+          <div class="mc-t" style="color:var(--text-mid)">Price & value</div>
+          <div class="mc-d" style="color:var(--text-light)">Value perception<br>Loyalty offers</div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:4px">
+        <span style="font-size:8px;color:var(--text-light)">← Easier to fix</span>
+        <span style="font-size:8px;color:var(--text-light)">Higher impact ↑</span>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="bt">Projected rating — service neg rate → brand avg (20%)</div>
+      <div style="margin-top:4px">
+        <div class="sc">
+          <div class="sc-h"><span style="font-size:9px;font-weight:500;color:#8B1A1A">Randwick</span><span style="font-size:8px;color:var(--text-light)">neg 36.4% → 20%</span></div>
+          <div class="sc-nums">
+            <span style="font-size:16px;font-weight:500;color:#8B1A1A">3.59★</span>
+            <span style="color:var(--text-light)">→</span>
+            <span style="font-size:16px;font-weight:500;color:#2D6A2D">~4.10★</span>
+            <span class="badge" style="background:var(--green-light);color:#1A5C1A;margin-left:auto">+0.51★</span>
+          </div>
+          <div class="sc-bar"><div style="width:72%;background:#9C7A5A"></div><div style="width:10%;background:#2D6A2D;border-radius:0 3px 3px 0"></div></div>
+        </div>
+        <div class="sc">
+          <div class="sc-h"><span style="font-size:9px;font-weight:500;color:#8B1A1A">Parramatta</span><span style="font-size:8px;color:var(--text-light)">neg 34.7% → 20%</span></div>
+          <div class="sc-nums">
+            <span style="font-size:16px;font-weight:500;color:#8B1A1A">3.84★</span>
+            <span style="color:var(--text-light)">→</span>
+            <span style="font-size:16px;font-weight:500;color:#2D6A2D">~4.28★</span>
+            <span class="badge" style="background:var(--green-light);color:#1A5C1A;margin-left:auto">+0.44★</span>
+          </div>
+          <div class="sc-bar"><div style="width:77%;background:#9C7A5A"></div><div style="width:9%;background:#2D6A2D;border-radius:0 3px 3px 0"></div></div>
+        </div>
+        <div class="sc">
+          <div class="sc-h"><span style="font-size:9px;font-weight:500;color:var(--yellow-dark)">Manly</span><span style="font-size:8px;color:var(--text-light)">neg 30.1% → 20%</span></div>
+          <div class="sc-nums">
+            <span style="font-size:16px;font-weight:500;color:var(--yellow-dark)">4.11★</span>
+            <span style="color:var(--text-light)">→</span>
+            <span style="font-size:16px;font-weight:500;color:#2D6A2D">~4.48★</span>
+            <span class="badge" style="background:var(--green-light);color:#1A5C1A;margin-left:auto">+0.37★</span>
+          </div>
+          <div class="sc-bar"><div style="width:82%;background:#9C7A5A"></div><div style="width:7%;background:#2D6A2D;border-radius:0 3px 3px 0"></div></div>
+        </div>
+      </div>
+      <div class="bn">Regression-based projection · treat as directional estimate</div>
+    </div>
+  </div>
+
+  <div class="box" style="margin-bottom:8px">
+    <div class="bt">What does success look like? — Learning from top performers</div>
+    <table class="dt">
+      <thead><tr><th>Store</th><th>Avg rating</th><th>Positive rate</th><th>Service neg%</th><th>What they do differently</th></tr></thead>
+      <tbody>
+        <tr class="pos"><td>Miranda</td><td>4.45 ★</td><td>90.9%</td><td>~8%</td><td>Consistent staff, proactive issue resolution</td></tr>
+        <tr class="pos"><td>Cronulla</td><td>4.60 ★</td><td>88.6%</td><td>~10%</td><td>Friendly regulars culture, manageable volume</td></tr>
+        <tr><td>Circular Quay</td><td>4.64 ★</td><td>85.7%</td><td>~12%</td><td>Strong product focus, tourist traffic managed well</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="insight">
+    <div class="it">Key insight & recommendation — Page 3</div>
+    <div class="ib">Service training is the single highest-ROI action. Improving Randwick, Parramatta and Manly to brand average projects gains of 0.37–0.51★ per store — achievable without any product changes. Miranda and Cronulla provide the proven internal model to replicate.</div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<script>
+function showPage(i,el){
+  document.querySelectorAll('.page').forEach((p,j)=>p.classList.toggle('active',j===i));
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',j===i));
+}
+
+function toggleChip(el,group){
+  const siblings=el.parentElement.querySelectorAll('.chip');
+  siblings.forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function resetSlicers(){
+  document.querySelectorAll('.slicer-group').forEach(g=>{
+    const chips=g.querySelectorAll('.chip');
+    chips.forEach((c,i)=>{c.classList.toggle('active',i===0)});
+  });
+}
+
+const dots=document.querySelectorAll('.dot');
+const tip=document.getElementById('tip');
+dots.forEach(d=>{
+  d.addEventListener('mouseenter',()=>{
+    tip.innerHTML=`<div style="font-weight:500;font-size:10px;color:#FAF3E8;margin-bottom:4px">${d.dataset.name}</div>
+      <div style="font-size:9px;color:#C4A882">Rating: <b style="color:#FAF3E8">${d.dataset.rating} ★</b></div>
+      <div style="font-size:9px;color:#C4A882">Reviews: <b style="color:#FAF3E8">${d.dataset.reviews}</b></div>
+      <div style="font-size:9px;color:#C4A882">Positive: <b style="color:#A8D880">${d.dataset.pos}</b></div>
+      <div style="font-size:9px;color:#C4A882">Negative: <b style="color:#F09080">${d.dataset.neg}</b></div>
+      <div style="font-size:9px;color:#C4A882">Main issue: <b style="color:#FAF3E8">${d.dataset.issue}</b></div>
+      <div style="margin-top:5px;height:4px;border-radius:3px;background:#5C3A1E;overflow:hidden"><div style="width:${d.dataset.pos};height:100%;background:#2D6A2D;border-radius:3px"></div></div>`;
+    tip.style.display='block';
+  });
+  d.addEventListener('mouseleave',()=>tip.style.display='none');
+});
+
+const heatData=[
+  {store:'Randwick',s:58,w:42,p:35,f:20,pr:55},
+  {store:'Parramatta',s:52,w:38,p:30,f:18,pr:45},
+  {store:'Manly',s:44,w:48,p:25,f:15,pr:38},
+  {store:'Darling Sq.',s:40,w:30,p:20,f:12,pr:35},
+  {store:'Surry Hills',s:32,w:25,p:18,f:10,pr:28},
+  {store:'Newtown',s:20,w:18,p:15,f:8,pr:22},
+  {store:'Miranda',s:8,w:10,p:5,f:5,pr:12},
+  {store:'Cronulla',s:10,w:12,p:8,f:6,pr:14},
+];
+
+function heatColor(v){
+  if(v>50)return`#C0392B`;
+  if(v>35)return`#E8621A`;
+  if(v>20)return`#E8C890`;
+  if(v>10)return`#D8EDD8`;
+  return`#2D6A2D`;
+}
+function heatTextColor(v){return v>35?'white':v>20?'#5C3A1E':'#1A5C1A';}
+
+const tbody=document.getElementById('heatmap-body');
+heatData.forEach((r,i)=>{
+  const tr=document.createElement('tr');
+  const vals=[r.s,r.w,r.p,r.f,r.pr];
+  tr.innerHTML=`<td style="padding:3px 6px;border-bottom:0.5px solid var(--cream-dark);font-size:8px;color:var(--text-mid);background:${i%2?'var(--cream)':'white'}">${r.store}</td>`+
+    vals.map(v=>`<td style="padding:3px 5px;border-bottom:0.5px solid var(--cream-dark);text-align:center;background:${heatColor(v)};color:${heatTextColor(v)};font-size:8px;font-weight:500">${v}%</td>`).join('');
+  tbody.appendChild(tr);
+});
+</script>
