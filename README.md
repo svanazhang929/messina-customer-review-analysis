@@ -3,7 +3,7 @@
 > **4.52★ overall. A 1-star gap hiding inside it.**  
 > An end-to-end customer review analysis built to identify what drives store-level rating differences across Gelato Messina's 20 Sydney locations.
 
-📄 [Read the full analysis on LinkedIn](#) &nbsp;|&nbsp; 📊 [View Dashboard PDF](dashboard/messina_dashboard.pdf)
+📄 [Read the full analysis on LinkedIn](https://www.linkedin.com/posts/svanazhang0929_powerbi-dataanalytics-customerexperience-ugcPost-7465774077606010881-JmQT/?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAADBIxgkBuA5Y1kcCRABVOblM3rPH5pLNCyI) &nbsp;|&nbsp; 📊 [View Dashboard PDF](dashboard/messina_dashboard.pdf)
 
 ---
 
